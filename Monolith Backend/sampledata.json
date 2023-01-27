@@ -1,0 +1,72 @@
+[
+    {
+    "name":"alphonso mango",
+    "desc":"great Quality of Mango",
+    "type":"fruits",
+    "banner":"https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "unit":1,
+    "price":300, 
+    "available":true,
+    "suplier":"Golden seed firming"
+},
+{
+    "name":"Apples",
+    "desc":"great Quality of Apple",
+    "type":"fruits",
+    "banner":"https://images.pexels.com/photos/89778/strawberries-frisch-ripe-sweet-89778.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "unit":1,
+    "price":140, 
+    "available":true,
+    "suplier":"Golden seed firming"
+},
+{
+    "name":"Kesar Mango",
+    "desc":"great Quality of Mango",
+    "type":"fruits",
+    "banner":"https://images.pexels.com/photos/918643/pexels-photo-918643.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "unit":1,
+    "price":170, 
+    "available":true,
+    "suplier":"Golden seed firming"
+},
+{
+    "name":"Langra Mango",
+    "desc":"great Quality of Mango",
+    "type":"fruits",
+    "banner":"https://images.pexels.com/photos/2363345/pexels-photo-2363345.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "unit":1,
+    "price":280, 
+    "available":true,
+    "suplier":"Golden seed firming"
+},
+{
+    "name":"Broccoli",
+    "desc":"great Quality of Fresh Vegetable",
+    "type":"vegetables",
+    "banner":"https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "unit":1,
+    "price":280, 
+    "available":true,
+    "suplier":"Golden seed firming"
+},
+{
+    "name":"Cauliflower",
+    "desc":"great Quality of Fresh Vegetable",
+    "type":"vegetables",
+    "banner":"https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "unit":1,
+    "price":280, 
+    "available":true,
+    "suplier":"Golden seed firming"
+},
+{
+    "name":"Olive Oil",
+    "desc":"great Quality of Oil",
+    "type":"oils",
+    "banner":"https://images.pexels.com/photos/96616/pexels-photo-96616.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "unit":1,
+    "price":400, 
+    "available":true,
+    "suplier":"Golden seed firming"
+}
+]
