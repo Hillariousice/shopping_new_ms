@@ -1,5 +1,5 @@
 import { CustomerModel, AddressModel } from '../models';
-import { APIError, BadRequestError, STATUS_CODES } from '../../utils/app-errors';
+import { APIError, STATUS_CODES } from '../../utils/app-errors';
 
 interface Icustomer {
     _id:string
@@ -7,6 +7,15 @@ interface Icustomer {
     password: string, 
     phone:string, 
     salt:string, 
+}
+
+interface Iproduct{
+    _id:any, 
+    name:string, 
+    desc:string, 
+    price:number, 
+    available:boolean, 
+    banner:string
 }
 
 interface Iaddress {
@@ -74,11 +83,7 @@ export class CustomerRepository {
     async FindCustomerById({ id }:{id:string}){
 
         try {
-            const existingCustomer = await CustomerModel.findById(id)
-            .populate('address')
-            .populate('wishlist')
-            .populate('orders')
-            .populate('cart.product');
+            const existingCustomer = await CustomerModel.findById(id).populate('address')
             return existingCustomer;
         } catch (err) {
             throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Find Customer', true, '', true);
@@ -95,7 +100,16 @@ export class CustomerRepository {
         }
     }
 
-    async AddWishlistItem(customerId:string, product:any){
+    async AddWishlistItem(customerId:string, {_id, name, desc, price, available, banner}:Iproduct){
+
+        const product ={
+            _id, 
+            name, 
+            desc, 
+            price, 
+            available, 
+            banner
+        }
         
         try{
             const profile:any = await CustomerModel.findById(customerId).populate('wishlist');
@@ -136,16 +150,16 @@ export class CustomerRepository {
     }
 
 
-    async AddCartItem(customerId:string, product:any, qty:any, isRemove:any){
+    async AddCartItem(customerId:string, {_id, name, price, banner}:Iproduct, qty:any, isRemove:any){
 
         try{
 
-            const profile = await CustomerModel.findById(customerId).populate('cart.product');
+            const profile = await CustomerModel.findById(customerId).populate('cart');
     
             if(profile){ 
      
                 const cartItem = {
-                    product,
+                    product:{_id, name, price, banner},
                     unit: qty,
                 };
               
@@ -154,7 +168,7 @@ export class CustomerRepository {
                 if(cartItems.length > 0){
                     let isExist = false;
                      cartItems.map((item:any) => {
-                        if(item.product._id.toString() === product._id.toString()){
+                        if(item.product._id.toString() === _id.toString()){
                             if(isRemove){
                                 cartItems.splice(cartItems.indexOf(item), 1);
                             }else{
@@ -175,7 +189,7 @@ export class CustomerRepository {
     
                 const cartSaveResult = await profile.save();
 
-                return cartSaveResult.cart;
+                return cartSaveResult;
             }
             
             throw new Error('Unable to add to cart!');

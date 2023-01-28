@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { customer, products, shopping } from './api';
+import { customer } from './api';
  import HandleErrors from './utils/error-handler';
 
 
@@ -13,8 +13,6 @@ export const  expressApp = async (app:express.Application) => {
 
     //api
     customer(app);
-    products(app);
-    shopping(app);
 
     // error handling
     app.use(HandleErrors);
