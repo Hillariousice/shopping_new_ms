@@ -1,12 +1,11 @@
 import ProductService from '../services/product-service';
-import CustomerService from '../services/customer-service';
+import { PublishedCustomerEvent, PublishedShoppingEvent  } from '../utils';
 import UserAuth from './middlewares/auth';
 import express, {Request, Response, NextFunction} from 'express'
 
 export const products = (app:express.Application) => {
     
     const service = new ProductService();
-    const customerService = new CustomerService();
 
 
     app.post('/product/create', async(req:Request | any,res:Response,next:NextFunction) => {
@@ -67,11 +66,14 @@ export const products = (app:express.Application) => {
     app.put('/wishlist',UserAuth, async (req:Request | any,res:Response,next:NextFunction) => {
 
         const { _id } = req.user;
+
+        // Get the payload to send to customer service
+      
         
         try {
-            const product = await service.GetProductById(req.body._id);
-            const wishList = await customerService.AddToWishlist(_id, product)
-            return res.status(200).json(wishList);
+            const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:req.body.qty},'ADD_TO_WISHLIST')
+            PublishedCustomerEvent(data);
+            return res.status(200).json(data.data.product);
         } catch (err) {
             
         }
@@ -83,9 +85,9 @@ export const products = (app:express.Application) => {
         const productId = req.params.id;
 
         try {
-            const product = await service.GetProductById(productId);
-            const wishlist = await customerService.AddToWishlist(_id, product)
-            return res.status(200).json(wishlist);
+            const {data} = await service.GetProductPayload(_id,{productId,qty:req.body.qty},'REMOVE_FROM_WISHLIST')
+            PublishedCustomerEvent(data)
+            return res.status(200).json(data.data.product);
         } catch (err) {
             next(err)
         }
@@ -94,14 +96,19 @@ export const products = (app:express.Application) => {
 
     app.put('/cart',UserAuth, async (req:Request | any,res:Response,next:NextFunction) => {
         
-        const { _id, qty } = req.body;
+        const { _id } = req.user;
         
         try {     
-            const product = await service.GetProductById(_id);
-    
-            const result =  await customerService.ManageCart(req.user._id, product, qty, false);
-    
-            return res.status(200).json(result);
+            const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:req.body.qty},'ADD_TO_CART') 
+          
+            PublishedCustomerEvent(data)
+            PublishedShoppingEvent(data)
+
+            const response = {
+                product: data.data.product,
+                unit: data.data.qty
+            }
+            return res.status(200).json(response);
             
         } catch (err) {
             next(err)
@@ -111,11 +118,19 @@ export const products = (app:express.Application) => {
     app.delete('/cart/:id',UserAuth, async (req:Request | any,res:Response,next:NextFunction) => {
 
         const { _id } = req.user;
+        const productId = req.params.id
 
         try {
-            const product = await service.GetProductById(req.params.id);
-            const result = await customerService.ManageCart(_id, product, 0 , true);             
-            return res.status(200).json(result);
+            const {data} = await service.GetProductPayload(_id,{productId, qty:req.body.qty},'REMOVE_FROM_CART') 
+
+           PublishedCustomerEvent(data);
+           PublishedShoppingEvent(data)  
+           
+           const response = {
+            product: data.data.product,
+            unit: data.data.qty
+        }
+            return res.status(200).json(response);
         } catch (err) {
             next(err)
         }

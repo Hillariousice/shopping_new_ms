@@ -1,6 +1,7 @@
 import { genSalt, hash } from "bcrypt";
 import { sign, verify } from "jsonwebtoken";
 import {Request} from 'express'
+import axios from 'axios'
 
 import { APP_SECRET } from "../config";
 
@@ -49,4 +50,20 @@ export function FormateData(data: any) {
   } else {
     throw new Error("Data Not found!");
   }
+}
+
+export const PublishedCustomerEvent = async(payload:any)=>{
+ 
+  axios.post('http://localhost:8000/customer/app-events', {
+    payload
+  })
+
+}
+
+export const PublishedShoppingEvent = async(payload:any)=>{
+
+  axios.post('http://localhost:8000/shopping/app-events', {
+    payload
+  })
+  
 }

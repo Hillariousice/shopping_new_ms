@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { customer, products, shopping } from './api';
+import { products, appEvents } from './api';
  import HandleErrors from './utils/error-handler';
 
 
@@ -11,10 +11,10 @@ export const  expressApp = async (app:express.Application) => {
     app.use(cors());
     app.use(express.static(__dirname + '/public'))
 
+    //Listeners
+    appEvents(app)
     //api
-    customer(app);
     products(app);
-    shopping(app);
 
     // error handling
     app.use(HandleErrors);

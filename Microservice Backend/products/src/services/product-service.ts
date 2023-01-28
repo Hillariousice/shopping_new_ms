@@ -75,6 +75,21 @@ class ProductService {
             throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR,'Data Not found',true, '', true)
         }
     }
+
+    async GetProductPayload(userId:any, {productId, qty}:{productId:any, qty:number}, event:string){
+
+        const product = await this.repository.FindById(productId)
+
+        if(product){
+           const payload = {
+            event:event,
+            data: {userId, product, qty}
+           }
+          return FormateData(payload)
+        }else{
+            return FormateData({error: 'No product avalilable'})
+        }
+    }
      
 }
 
