@@ -19,7 +19,7 @@ export class AppError extends Error {
         this.isOperational = isOperational
         this.errorStack = errorStack;
         this.logError = logingErrorResponse;
-        Error.captureStackTrace(this);
+        // Error.captureStackTrace(this);
     }
 }
 

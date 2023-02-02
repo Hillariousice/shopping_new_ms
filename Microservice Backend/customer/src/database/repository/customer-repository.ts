@@ -90,7 +90,7 @@ export class CustomerRepository {
         }
     }
 
-    async Wishlist(customerId:string){
+    async Wishlist(customerId:any){
         try{
             const profile:any = await CustomerModel.findById(customerId).populate('wishlist');
            
@@ -111,7 +111,6 @@ export class CustomerRepository {
             banner
         }
         
-        try{
             const profile:any = await CustomerModel.findById(customerId).populate('wishlist');
            
             if(profile){
@@ -120,7 +119,7 @@ export class CustomerRepository {
       
                 if(wishlist.length > 0){
                     let isExist = false;
-                    wishlist.map((item: { _id: { toString: () => any; }; }) => {
+                    wishlist.map((item: any) => {
                         if(item._id.toString() === product._id.toString()){
                            const index = wishlist.indexOf(item);
                            wishlist.splice(index,1);
@@ -135,7 +134,6 @@ export class CustomerRepository {
                 }else{
                     wishlist.push(product);
                 }
-    
                 profile.wishlist = wishlist;
             }
     
@@ -143,16 +141,12 @@ export class CustomerRepository {
     
             return profileResult.wishlist;
 
-        }catch(err){
-            throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Add to WishList',true, '', true)
-        }
-
     }
 
 
-    async AddCartItem(customerId:string, {_id, name, price, banner}:Iproduct, qty:any, isRemove:any){
+    async AddCartItem(customerId:any, {_id, name, price, banner}:Iproduct, qty:any, isRemove:any){
 
-        try{
+        // try{
 
             const profile = await CustomerModel.findById(customerId).populate('cart');
     
@@ -164,6 +158,7 @@ export class CustomerRepository {
                 };
               
                 let cartItems:any = profile.cart;
+                
                 
                 if(cartItems.length > 0){
                     let isExist = false;
@@ -194,13 +189,13 @@ export class CustomerRepository {
             
             throw new Error('Unable to add to cart!');
 
-        }catch(err){
-            throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Create Customer',true, '', true)
-        }
+        // }catch(err){
+        //     throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Create Customer',true, '', true)
+        // }
 
     }
 
-    async AddOrderToProfile(customerId:string, order:any){
+    async AddOrderToProfile(customerId:any, order:any){
  
         try{
 

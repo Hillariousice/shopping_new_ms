@@ -71,8 +71,9 @@ export const products = (app:express.Application) => {
       
         
         try {
-            const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:req.body.qty},'ADD_TO_WISHLIST')
-            PublishedCustomerEvent(data);
+            const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:1},'ADD_TO_WISHLIST')
+            // console.log(data)
+            await PublishedCustomerEvent(data);
             return res.status(200).json(data.data.product);
         } catch (err) {
             
@@ -85,7 +86,7 @@ export const products = (app:express.Application) => {
         const productId = req.params.id;
 
         try {
-            const {data} = await service.GetProductPayload(_id,{productId,qty:req.body.qty},'REMOVE_FROM_WISHLIST')
+            const {data} = await service.GetProductPayload(_id,{productId,qty:1},'REMOVE_FROM_WISHLIST')
             PublishedCustomerEvent(data)
             return res.status(200).json(data.data.product);
         } catch (err) {

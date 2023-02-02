@@ -25,7 +25,7 @@ const CustomerSchema = new Schema({
         { 
             _id:{type:String, require:true},
             name:{type:String},
-            description:{type:String},
+            desc:{type:String},
             banner: {type: String},
             available: {type:Boolean },
             price: {type:Number}

@@ -54,7 +54,7 @@ export function FormateData(data: any) {
 
 export const PublishedCustomerEvent = async(payload:any)=>{
  
-  axios.post('http://localhost:8000/customer/app-events', {
+   axios.post('http://localhost:8000/customer/app-events', {
     payload
   })
 
@@ -62,7 +62,7 @@ export const PublishedCustomerEvent = async(payload:any)=>{
 
 export const PublishedShoppingEvent = async(payload:any)=>{
 
-  axios.post('http://localhost:8000/shopping/app-events', {
+   axios.post('http://localhost:8000/shopping/app-events', {
     payload
   })
   

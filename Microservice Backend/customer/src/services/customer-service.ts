@@ -113,7 +113,7 @@ class CustomerService {
 
     async AddToWishlist(customerId: any, product: any){
         try {
-            const wishlistResult = await this.repository.AddWishlistItem(customerId, product);        
+            const wishlistResult = await this.repository.AddWishlistItem(customerId, product);     
            return FormateData(wishlistResult);
     
         } catch (err) {
@@ -123,7 +123,8 @@ class CustomerService {
 
     async ManageCart(customerId: any, product: any, qty: any, isRemove: boolean){
         try {
-            const cartResult = await this.repository.AddCartItem(customerId, product, qty, isRemove);        
+            const cartResult = await this.repository.AddCartItem(customerId, product, qty, isRemove);  
+            // console.log(cartResult)      
             return FormateData(cartResult);
         } catch (err) {
             throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR,'Data Not found',true, '', true)
@@ -140,6 +141,8 @@ class CustomerService {
     }
 
     async SubscribeEvents(payload: { event: any; data: any; }){
+
+        payload = JSON.parse(JSON.stringify(payload))
  
         const { event, data } =  payload;
 
@@ -158,9 +161,6 @@ class CustomerService {
                 break;
             case 'CREATE_ORDER':
                 this.ManageOrder(userId,order);
-                break;
-            case 'TEST':
-                console.log("Working... Subscriber")
                 break;
             default:
                 break;

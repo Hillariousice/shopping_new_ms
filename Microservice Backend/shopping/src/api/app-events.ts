@@ -1,9 +1,9 @@
-import CustomerService from '../services/customer-service'
+import ShoppingService from '../services/shopping-service';
 import express,{Request, Response, NextFunction} from 'express'
 
 export const appEvents = (app:express.Application) => {
 
-    const service = new CustomerService();
+    const service = new ShoppingService();
 
     app.use('/app-events', async(req:Request,res:Response,next:NextFunction)=>{
      
@@ -11,8 +11,7 @@ export const appEvents = (app:express.Application) => {
 
         service.SubscribeEvents(payload)
 
-        console.log("========= Customer service recieved Events===========")
-        // console.log(payload);
-        return res.json(payload)
+        console.log("========= Shopping service recieved Events===========")
+        return res.status(200).json(payload)
     })
 }
