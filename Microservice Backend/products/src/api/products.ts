@@ -1,9 +1,11 @@
 import ProductService from '../services/product-service';
-import { PublishedCustomerEvent, PublishedShoppingEvent  } from '../utils';
+import { PublishMessage } from '../utils';
 import UserAuth from './middlewares/auth';
 import express, {Request, Response, NextFunction} from 'express'
+import { Channel } from 'diagnostics_channel';
+import {SHOPPING_BINDING_KEY,CUSTOMER_BINDING_KEY} from '../config'
 
-export const products = (app:express.Application) => {
+export const products = (app:express.Application, channel:any) => {
     
     const service = new ProductService();
 
@@ -73,7 +75,9 @@ export const products = (app:express.Application) => {
         try {
             const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:1},'ADD_TO_WISHLIST')
             // console.log(data)
-            await PublishedCustomerEvent(data);
+            // PublishedCustomerEvent(data);
+
+            PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
             return res.status(200).json(data.data.product);
         } catch (err) {
             
@@ -87,7 +91,10 @@ export const products = (app:express.Application) => {
 
         try {
             const {data} = await service.GetProductPayload(_id,{productId,qty:1},'REMOVE_FROM_WISHLIST')
-            PublishedCustomerEvent(data)
+
+            // PublishedCustomerEvent(data)
+            PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
+            
             return res.status(200).json(data.data.product);
         } catch (err) {
             next(err)
@@ -102,8 +109,12 @@ export const products = (app:express.Application) => {
         try {     
             const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:req.body.qty},'ADD_TO_CART') 
           
-            PublishedCustomerEvent(data)
-            PublishedShoppingEvent(data)
+            // PublishedCustomerEvent(data)
+            // PublishedShoppingEvent(data)
+
+            PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
+
+            PublishMessage(channel,SHOPPING_BINDING_KEY, data)
 
             const response = {
                 product: data.data.product,
@@ -124,8 +135,11 @@ export const products = (app:express.Application) => {
         try {
             const {data} = await service.GetProductPayload(_id,{productId, qty:req.body.qty},'REMOVE_FROM_CART') 
 
-           PublishedCustomerEvent(data);
-           PublishedShoppingEvent(data)  
+        //    PublishedCustomerEvent(data);
+        //    PublishedShoppingEvent(data)  
+        PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
+        PublishMessage(channel,SHOPPING_BINDING_KEY, data)
+
            
            const response = {
             product: data.data.product,

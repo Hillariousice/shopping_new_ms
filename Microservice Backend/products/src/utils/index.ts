@@ -1,16 +1,19 @@
 import { genSalt, hash } from "bcrypt";
 import { sign, verify } from "jsonwebtoken";
-import {Request} from 'express'
-import axios from 'axios'
+import { Request } from "express";
+import amqplib, { Channel, Connection } from "amqplib";
 
-import { APP_SECRET } from "../config";
+import { APP_SECRET, MESSAGE_BROKER_URL, EXCHANGE_NAME } from "../config";
 
 //Utility functions
 export async function GenerateSalt() {
   return await genSalt();
 }
 
-export async function GeneratePassword(password: string | Buffer, salt: string) {
+export async function GeneratePassword(
+  password: string | Buffer,
+  salt: string
+) {
   return await hash(password, salt);
 }
 
@@ -31,9 +34,9 @@ export async function GenerateSignature(payload: string | object | Buffer) {
   }
 }
 
-export async function ValidateSignature(req:Request | any) {
+export async function ValidateSignature(req: Request | any) {
   try {
-    const signature:any = req.get("Authorization");
+    const signature: any = req.get("Authorization");
     console.log(signature);
     const payload = verify(signature.split(" ")[1], APP_SECRET);
     req.user = payload;
@@ -52,18 +55,36 @@ export function FormateData(data: any) {
   }
 }
 
-export const PublishedCustomerEvent = async(payload:any)=>{
- 
-   axios.post('http://localhost:8000/customer/app-events', {
-    payload
-  })
+/* ================ Message broker ================== */
 
-}
+//Create a channel
+export const CreateChannel = async () => {
+  try {
+    const connection: Connection = await amqplib.connect(MESSAGE_BROKER_URL);
+    const channel: Channel = await connection.createChannel();
+    await channel.assertExchange(EXCHANGE_NAME, "direct");
+    return channel;
+  } catch (err) {
+    throw err;
+  }
+};
 
-export const PublishedShoppingEvent = async(payload:any)=>{
+//Publish message
+export const PublishMessage = async (channel:Channel, binding_key: string, message: WithImplicitCoercion<ArrayBuffer | SharedArrayBuffer>) => {
+  try {
+    channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
+  } catch (err) {
+    throw err;
+  }
+};
 
-   axios.post('http://localhost:8000/shopping/app-events', {
-    payload
-  })
-  
-}
+// Subcribe message
+export const SubscribeMessage = async (channel:Channel, binding_key: string) => {
+  const appQueue = await channel.assertQueue('QUEUE_NAME');
+  channel.bindQueue(appQueue.queue, EXCHANGE_NAME, binding_key);
+  channel.consume(appQueue.queue, (data: any) => {
+    console.log("recieved data");
+    console.log(data.content.toString());
+    channel.ack(data);
+  });
+};
