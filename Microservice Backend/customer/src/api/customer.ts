@@ -1,9 +1,11 @@
 import CustomerService from "../services/customer-service";
 import UserAuth from "./middlewares/auth";
 import express, {Request, Response, NextFunction} from 'express'
+import {SubscribeMessage} from '../utils'
 
-export const customer = (app:express.Application) => {
+export const customer = (app:express.Application,channel:any) => {
   const service = new CustomerService();
+  SubscribeMessage(channel, service)
 
   app.post("/signup", async (req:Request,res:Response,next:NextFunction) => {
     try {

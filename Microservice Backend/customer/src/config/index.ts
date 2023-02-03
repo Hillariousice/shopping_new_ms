@@ -13,4 +13,7 @@ if (process.env.NODE_ENV !== "prod") {
   export const PORT = process.env.PORT as string
   export const DB_URL=  process.env.MONGODB_URI as string
   export const APP_SECRET = process.env.APP_SECRET as string
-
+  export const MESSAGE_BROKER_URL = process.env.MESSAGE_BROKER_URL as string
+  export const EXCHANGE_NAME = 'ONLINE_SHOPPING' 
+  export const CUSTOMER_BINDING_KEY = 'CUSTOMER_SERVICE'
+  export const QUEUE_NAME = 'SHOPPING_QUEUE'

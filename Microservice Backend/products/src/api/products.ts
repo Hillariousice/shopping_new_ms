@@ -2,7 +2,6 @@ import ProductService from '../services/product-service';
 import { PublishMessage } from '../utils';
 import UserAuth from './middlewares/auth';
 import express, {Request, Response, NextFunction} from 'express'
-import { Channel } from 'diagnostics_channel';
 import {SHOPPING_BINDING_KEY,CUSTOMER_BINDING_KEY} from '../config'
 
 export const products = (app:express.Application, channel:any) => {
@@ -77,7 +76,7 @@ export const products = (app:express.Application, channel:any) => {
             // console.log(data)
             // PublishedCustomerEvent(data);
 
-            PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
+            PublishMessage(channel,CUSTOMER_BINDING_KEY, JSON.stringify(data))
             return res.status(200).json(data.data.product);
         } catch (err) {
             
@@ -93,8 +92,8 @@ export const products = (app:express.Application, channel:any) => {
             const {data} = await service.GetProductPayload(_id,{productId,qty:1},'REMOVE_FROM_WISHLIST')
 
             // PublishedCustomerEvent(data)
-            PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
-            
+            PublishMessage(channel,CUSTOMER_BINDING_KEY, JSON.stringify(data))
+
             return res.status(200).json(data.data.product);
         } catch (err) {
             next(err)
@@ -112,9 +111,9 @@ export const products = (app:express.Application, channel:any) => {
             // PublishedCustomerEvent(data)
             // PublishedShoppingEvent(data)
 
-            PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
+            PublishMessage(channel,CUSTOMER_BINDING_KEY, JSON.stringify(data))
 
-            PublishMessage(channel,SHOPPING_BINDING_KEY, data)
+            PublishMessage(channel,SHOPPING_BINDING_KEY, JSON.stringify(data))
 
             const response = {
                 product: data.data.product,
@@ -137,8 +136,8 @@ export const products = (app:express.Application, channel:any) => {
 
         //    PublishedCustomerEvent(data);
         //    PublishedShoppingEvent(data)  
-        PublishMessage(channel,CUSTOMER_BINDING_KEY, data)
-        PublishMessage(channel,SHOPPING_BINDING_KEY, data)
+        PublishMessage(channel,CUSTOMER_BINDING_KEY, JSON.stringify(data))
+        PublishMessage(channel,SHOPPING_BINDING_KEY, JSON.stringify(data))
 
            
            const response = {

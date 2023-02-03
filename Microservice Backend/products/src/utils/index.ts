@@ -70,9 +70,10 @@ export const CreateChannel = async () => {
 };
 
 //Publish message
-export const PublishMessage = async (channel:Channel, binding_key: string, message: WithImplicitCoercion<ArrayBuffer | SharedArrayBuffer>) => {
+export const PublishMessage = async (channel:Channel, binding_key: string, message:any) => {
   try {
     channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
+    console.log("Message has been sent"+ message)
   } catch (err) {
     throw err;
   }

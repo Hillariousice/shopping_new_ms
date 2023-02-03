@@ -4,7 +4,7 @@ import { customer,appEvents } from './api';
  import HandleErrors from './utils/error-handler';
 
 
-export const  expressApp = async (app:express.Application) => {
+export const  expressApp = async (app:express.Application, channel:any) => {
 
     app.use(express.json({ limit: '1mb'}));
     app.use(express.urlencoded({ extended: true, limit: '1mb'}));
@@ -17,11 +17,11 @@ export const  expressApp = async (app:express.Application) => {
     //  next()
     // })
 
-    //Listen to Events 
-    appEvents(app)
+    // //Listen to Events 
+    // appEvents(app)
 
     //api
-    customer(app);
+    customer(app,channel);
 
     // error handling
     app.use(HandleErrors);

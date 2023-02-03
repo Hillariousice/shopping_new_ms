@@ -1,15 +1,25 @@
 import { genSalt, hash } from "bcrypt";
 import { sign, verify } from "jsonwebtoken";
-import {Request} from 'express'
+import { Request } from "express";
+import amqplib, { Channel, Connection } from "amqplib";
 
-import { APP_SECRET } from "../config";
+import {
+  APP_SECRET,
+  MESSAGE_BROKER_URL,
+  QUEUE_NAME,
+  EXCHANGE_NAME,
+  CUSTOMER_BINDING_KEY
+} from "../config";
 
 //Utility functions
 export async function GenerateSalt() {
   return await genSalt();
 }
 
-export async function GeneratePassword(password: string | Buffer, salt: string) {
+export async function GeneratePassword(
+  password: string | Buffer,
+  salt: string
+) {
   return await hash(password, salt);
 }
 
@@ -30,9 +40,9 @@ export async function GenerateSignature(payload: string | object | Buffer) {
   }
 }
 
-export async function ValidateSignature(req:Request | any) {
+export async function ValidateSignature(req: Request | any) {
   try {
-    const signature:any = req.get("Authorization");
+    const signature: any = req.get("Authorization");
     console.log(signature);
     const payload = verify(signature.split(" ")[1], APP_SECRET);
     req.user = payload;
@@ -50,3 +60,31 @@ export function FormateData(data: any) {
     throw new Error("Data Not found!");
   }
 }
+
+/* ================ Message broker ================== */
+
+//Create a channel
+export const CreateChannel = async () => {
+  try {
+    const connection: Connection = await amqplib.connect(MESSAGE_BROKER_URL);
+    const channel: Channel = await connection.createChannel();
+    await channel.assertExchange(EXCHANGE_NAME, "direct");
+    return channel;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Subcribe message
+export const SubscribeMessage = async (
+  channel: Channel,
+  service:any
+) => {
+  const appQueue = await channel.assertQueue(QUEUE_NAME);
+  channel.bindQueue(appQueue.queue, EXCHANGE_NAME,CUSTOMER_BINDING_KEY);
+  channel.consume(appQueue.queue, (data: any) => {
+    console.log("recieved data");
+    console.log(data.content.toString());
+    channel.ack(data);
+  });
+};
