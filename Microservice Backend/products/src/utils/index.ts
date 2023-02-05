@@ -58,11 +58,12 @@ export function FormateData(data: any) {
 /* ================ Message broker ================== */
 
 //Create a channel
-export const CreateChannel = async () => {
+export const CreateChannel = async() => {
   try {
     const connection: Connection = await amqplib.connect(MESSAGE_BROKER_URL);
     const channel: Channel = await connection.createChannel();
-    await channel.assertExchange(EXCHANGE_NAME, "direct");
+    //distributor which is distributing our message to the queue
+    await channel.assertExchange(EXCHANGE_NAME, "direct",{ durable: true });
     return channel;
   } catch (err) {
     throw err;

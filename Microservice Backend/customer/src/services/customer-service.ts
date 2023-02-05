@@ -140,9 +140,9 @@ class CustomerService {
         }
     }
 
-    async SubscribeEvents(payload: { event: any; data: any; }){
+    async SubscribeEvents(payload: any){
 
-        payload = JSON.parse(JSON.stringify(payload))
+        payload = JSON.parse(payload)
  
         const { event, data } =  payload;
 

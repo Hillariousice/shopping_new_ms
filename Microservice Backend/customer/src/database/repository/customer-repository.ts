@@ -112,6 +112,8 @@ export class CustomerRepository {
         }
         
             const profile:any = await CustomerModel.findById(customerId).populate('wishlist');
+
+           
            
             if(profile){
     

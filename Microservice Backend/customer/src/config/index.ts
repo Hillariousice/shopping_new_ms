@@ -16,4 +16,4 @@ if (process.env.NODE_ENV !== "prod") {
   export const MESSAGE_BROKER_URL = process.env.MESSAGE_BROKER_URL as string
   export const EXCHANGE_NAME = 'ONLINE_SHOPPING' 
   export const CUSTOMER_BINDING_KEY = 'CUSTOMER_SERVICE'
-  export const QUEUE_NAME = 'SHOPPING_QUEUE'
+  export const QUEUE_NAME = 'CUSTOMER_QUEUE'

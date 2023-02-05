@@ -68,7 +68,7 @@ export const CreateChannel = async () => {
   try {
     const connection: Connection = await amqplib.connect(MESSAGE_BROKER_URL);
     const channel: Channel = await connection.createChannel();
-    await channel.assertExchange(EXCHANGE_NAME, "direct");
+    await channel.assertExchange(EXCHANGE_NAME, 'direct',{ durable: true });
     return channel;
   } catch (err) {
     throw err;
@@ -83,8 +83,9 @@ export const SubscribeMessage = async (
   const appQueue = await channel.assertQueue(QUEUE_NAME);
   channel.bindQueue(appQueue.queue, EXCHANGE_NAME,CUSTOMER_BINDING_KEY);
   channel.consume(appQueue.queue, (data: any) => {
-    console.log("recieved data");
+    console.log("Recieved data in Customer Service");
     console.log(data.content.toString());
+    service.SubscribeEvents(data.content.toString())
     channel.ack(data);
   });
 };

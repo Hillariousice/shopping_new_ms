@@ -73,7 +73,7 @@ export const products = (app:express.Application, channel:any) => {
         
         try {
             const {data} = await service.GetProductPayload(_id,{productId:req.body._id, qty:1},'ADD_TO_WISHLIST')
-            // console.log(data)
+            //  console.log(data)
             // PublishedCustomerEvent(data);
 
             PublishMessage(channel,CUSTOMER_BINDING_KEY, JSON.stringify(data))
