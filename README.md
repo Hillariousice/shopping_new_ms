@@ -21,6 +21,7 @@
 - it easy to scale services and feature using the microservice 
 
 ## NOTE THROUGH THE README FOR EACH ARCHITECTURE TO UNDERSTAND BETTER
+## NOTE NGINX HANDLE 256 CONNECTION FOR ONE WOKER_PROCESSES
 
 ## YOU CAN REACH ME VIA LINKEDIN IF YOU HAVE QUESTIONS.
 https://www.linkedin.com/in/damilola-babalola-574460201/
